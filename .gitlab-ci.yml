@@ -1,0 +1,22 @@
+include:
+  - project: ${CI_KANIKO_BASE}
+    ref: main
+    file:
+      - operation_with_image.yaml
+
+variables:
+  KANIKO_CLI_DOCKER_BUILD_IMAGE: "${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+  KANIKO_CLI_CACHE_ARGS: "--cache=false"
+  KANIKO_CLI_BUILD_CUSTOM_ARGS: "--build-arg CI_JOB_TOKEN=${CI_JOB_TOKEN}"
+
+stages:
+  - build
+
+build:
+  stage: build
+  when: manual
+  variables:
+    IMAGE_TAG: latest
+  extends:
+    - .kaniko-build
+
